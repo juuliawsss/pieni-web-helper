@@ -64,6 +64,10 @@ const Index = () => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const clearCompleted = () => {
+    setTodos(todos.filter((todo) => !todo.completed));
+  };
+
   const completedCount = todos.filter((t) => t.completed).length;
   const pendingCount = todos.filter((t) => !t.completed).length;
 
@@ -132,6 +136,18 @@ const Index = () => {
                 />
               </div>
             ))
+          )}
+
+          {/* Clear completed button */}
+          {completedCount > 0 && (
+            <div className="pt-6 text-center animate-fade-in">
+              <button
+                onClick={clearCompleted}
+                className="text-sm text-muted-foreground hover:text-gold transition-colors duration-300 underline-offset-4 hover:underline"
+              >
+                Tyhjennä valmiit ({completedCount})
+              </button>
+            </div>
           )}
         </section>
 
