@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TodoItem from "@/components/TodoItem";
 import AddTodoForm from "@/components/AddTodoForm";
 import TodoStats from "@/components/TodoStats";
@@ -9,15 +9,39 @@ interface Todo {
   text: string;
   completed: boolean;
   priority: "low" | "medium" | "high";
-  createdAt: Date;
+  createdAt: string;
 }
 
+const STORAGE_KEY = "elegance-todos";
+
+const getInitialTodos = (): Todo[] => {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error("Virhe ladattaessa tehtäviä:", e);
+  }
+  // Oletusarvot jos ei tallennettuja
+  return [
+    { id: "1", text: "Suunnittele projektin rakenne", completed: true, priority: "high", createdAt: new Date().toISOString() },
+    { id: "2", text: "Luo käyttöliittymän komponentit", completed: false, priority: "high", createdAt: new Date().toISOString() },
+    { id: "3", text: "Testaa toiminnallisuudet", completed: false, priority: "medium", createdAt: new Date().toISOString() },
+  ];
+};
+
 const Index = () => {
-  const [todos, setTodos] = useState<Todo[]>([
-    { id: "1", text: "Suunnittele projektin rakenne", completed: true, priority: "high", createdAt: new Date() },
-    { id: "2", text: "Luo käyttöliittymän komponentit", completed: false, priority: "high", createdAt: new Date() },
-    { id: "3", text: "Testaa toiminnallisuudet", completed: false, priority: "medium", createdAt: new Date() },
-  ]);
+  const [todos, setTodos] = useState<Todo[]>(getInitialTodos);
+
+  // Tallenna localStorage:een aina kun todos muuttuu
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+    } catch (e) {
+      console.error("Virhe tallennettaessa tehtäviä:", e);
+    }
+  }, [todos]);
 
   const addTodo = (text: string, priority: "low" | "medium" | "high") => {
     const newTodo: Todo = {
@@ -25,7 +49,7 @@ const Index = () => {
       text,
       completed: false,
       priority,
-      createdAt: new Date(),
+      createdAt: new Date().toISOString(),
     };
     setTodos([newTodo, ...todos]);
   };
