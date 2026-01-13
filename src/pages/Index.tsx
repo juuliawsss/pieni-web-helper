@@ -38,6 +38,7 @@ const getInitialTodos = (): Todo[] => {
     { id: "1", text: "Suunnittele projektin rakenne", completed: true, priority: "high", category: "työ", createdAt: new Date().toISOString() },
     { id: "2", text: "Luo käyttöliittymän komponentit", completed: false, priority: "high", category: "työ", createdAt: new Date().toISOString() },
     { id: "3", text: "Siivoa keittiö", completed: false, priority: "medium", category: "koti", createdAt: new Date().toISOString() },
+    { id: "4", text: "Vie Roskat", completed: false, priority: "medium", category: "koti", createdAt: new Date().toISOString() },
   ];
 };
 
