@@ -1,20 +1,22 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CATEGORIES, Category } from "@/pages/Index";
 
 interface AddTodoFormProps {
-  onAdd: (text: string, priority: "low" | "medium" | "high") => void;
+  onAdd: (text: string, priority: "low" | "medium" | "high", category: Category) => void;
 }
 
 const AddTodoForm = ({ onAdd }: AddTodoFormProps) => {
   const [text, setText] = useState("");
   const [priority, setPriority] = useState<"low" | "medium" | "high">("medium");
+  const [category, setCategory] = useState<Category>("työ");
   const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (text.trim()) {
-      onAdd(text.trim(), priority);
+      onAdd(text.trim(), priority, category);
       setText("");
     }
   };
@@ -57,7 +59,7 @@ const AddTodoForm = ({ onAdd }: AddTodoFormProps) => {
       </div>
 
       {/* Priority selector */}
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm text-muted-foreground font-light">Prioriteetti:</span>
         <div className="flex gap-2">
           {priorities.map((p) => (
@@ -73,6 +75,28 @@ const AddTodoForm = ({ onAdd }: AddTodoFormProps) => {
               )}
             >
               {p.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Category selector */}
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm text-muted-foreground font-light">Kategoria:</span>
+        <div className="flex flex-wrap gap-2">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat.value}
+              type="button"
+              onClick={() => setCategory(cat.value)}
+              className={cn(
+                "px-3 py-1 text-sm rounded-full border transition-all duration-300",
+                category === cat.value
+                  ? cat.color
+                  : "bg-transparent border-border/50 text-muted-foreground hover:border-gold/30 hover:text-gold/70"
+              )}
+            >
+              {cat.label}
             </button>
           ))}
         </div>

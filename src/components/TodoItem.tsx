@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { Check, Trash2, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CATEGORIES, Category } from "@/pages/Index";
 
 interface TodoItemProps {
   id: string;
   text: string;
   completed: boolean;
   priority: "low" | "medium" | "high";
+  category: Category;
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
 }
 
-const TodoItem = ({ id, text, completed, priority, onToggle, onDelete }: TodoItemProps) => {
+const TodoItem = ({ id, text, completed, priority, category, onToggle, onDelete }: TodoItemProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const priorityStyles = {
@@ -19,6 +21,8 @@ const TodoItem = ({ id, text, completed, priority, onToggle, onDelete }: TodoIte
     medium: "border-l-gold-dim",
     high: "border-l-gold",
   };
+
+  const categoryInfo = CATEGORIES.find((c) => c.value === category);
 
   return (
     <div
@@ -47,19 +51,29 @@ const TodoItem = ({ id, text, completed, priority, onToggle, onDelete }: TodoIte
         )}
       </button>
 
-      {/* Text */}
-      <span
-        className={cn(
-          "flex-1 text-foreground/90 font-light tracking-wide transition-all duration-300",
-          completed && "line-through text-muted-foreground"
+      {/* Text and category */}
+      <div className="flex-1 min-w-0">
+        <span
+          className={cn(
+            "text-foreground/90 font-light tracking-wide transition-all duration-300",
+            completed && "line-through text-muted-foreground"
+          )}
+        >
+          {text}
+        </span>
+        {categoryInfo && (
+          <span className={cn(
+            "ml-2 px-2 py-0.5 text-xs rounded-full border inline-block",
+            categoryInfo.color
+          )}>
+            {categoryInfo.label}
+          </span>
         )}
-      >
-        {text}
-      </span>
+      </div>
 
       {/* Priority indicator */}
       {priority === "high" && !completed && (
-        <Star className="w-4 h-4 text-gold fill-gold/30" />
+        <Star className="w-4 h-4 text-gold fill-gold/30 flex-shrink-0" />
       )}
 
       {/* Delete button */}
